@@ -21,6 +21,11 @@ async function main() {
     rootLogger.info("Conectando ao Banco de dados");
     await loadDatabaseConnection(configuration.ormConfigFile);
 
+    /**
+     * Configuração principal, aqui você irá configurar os Controllers, Middlewares e outras configurações
+     * LEMBRE-SE DE SEMPRE ADICIONAR A CLASSE EM SEU RESPECTIVO LUGAR ASSIM QUE VOCÊ CRIA-LA
+     */
+
     const config: RoutingControllersOptions = {
         controllers: [AuthorsController, UserController, SessionController],
         middlewares: [DefaultMiddleware, HttpErrorAfterMiddleware],
@@ -29,6 +34,11 @@ async function main() {
     };
 
     const app = express();
+
+    /**
+     * Configurações de documentação
+     * aqui será utilizado caso você queira expor a documentação gerada autmaticamente na rota indicada no primeiro argumento
+     */
     loadDocRoute("/docs", app, config, {
         components: {
             securitySchemes: {
@@ -43,6 +53,11 @@ async function main() {
             version: "1.0.0",
         },
     });
+
+    /**
+     * Configura o servidor para uso com o routing-controllers
+     * o valor atribuido a server é igual ao app
+     */
     const server = useExpressServer(app, config);
 
     rootLogger.info("Iniciando Endpoint");

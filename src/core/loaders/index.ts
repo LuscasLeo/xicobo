@@ -10,7 +10,7 @@ import { loadRountingControllerContainer } from "./di/routing";
 import { loadTypeDIExtensionContainer } from "./di/typedi-ext";
 
 /**
- *
+ * Prepara conexão com banco de dados
  * @param configFile Caminnho para o arquivo de configuração
  * @returns {import('typeorm').Connection}
  */

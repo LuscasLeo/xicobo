@@ -1,0 +1,10 @@
+.vscode
+database
+logs/*
+node_modules
+out
+.prettierrc
+.editorconfig
+.env
+yarn.lock
+coverage

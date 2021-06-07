@@ -1,0 +1,12 @@
+{
+    "cors": true,
+    "controllers": [
+        "./**/*.controller.js"
+    ],
+    "middlewares": [
+      "./**/*.middleware.js"
+    ],
+    "interceptors": [
+      "./**/*.interceptor.js"
+    ]
+}

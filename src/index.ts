@@ -2,24 +2,27 @@ import express from "express";
 import "reflect-metadata";
 import { RoutingControllersOptions, useExpressServer } from "routing-controllers";
 import "source-map-support/register";
-import AuthorsController from "./app/authors/authors.controller";
-import configuration from "./configuration";
-import { loadContainers, loadDatabaseConnection, loadDocRoute } from "./core/loaders";
-import { rootLogger } from "./core/logging/logger";
+import Container from "typedi";
+import BotController, { BotSessionToken } from "./app/bot/bot.controller";
+import { createBotSession } from "./app/bot/bot.session";
 import DefaultMiddleware from "./app/middlewares/app.middleware";
 import HttpErrorAfterMiddleware from "./app/middlewares/http.error.after.middleware";
 import SessionController from "./app/session/session.controller";
-import UserController from "./app/users/user.controller";
+import configuration from "./configuration";
+import { loadContainers, loadDocRoute } from "./core/loaders";
+import { rootLogger } from "./core/logging/logger";
 
 /**
  * Entrypoint (Funcção principal) do sistema
  */
 async function main() {
     rootLogger.info("Inicializando Aplicação");
-    loadContainers();
+    await loadContainers();
 
-    rootLogger.info("Conectando ao Banco de dados");
-    await loadDatabaseConnection(configuration.ormConfigFile);
+    Container.set(BotSessionToken, await createBotSession(configuration.botID));
+
+    // rootLogger.info("Conectando ao Banco de dados");
+    // await loadDatabaseConnection(configuration.ormConfigFile);
 
     /**
      * Configuração principal, aqui você irá configurar os Controllers, Middlewares e outras configurações
@@ -27,7 +30,11 @@ async function main() {
      */
 
     const config: RoutingControllersOptions = {
-        controllers: [AuthorsController, UserController, SessionController],
+        controllers: [
+            BotController,
+            // UserController,
+            SessionController,
+        ],
         middlewares: [DefaultMiddleware, HttpErrorAfterMiddleware],
         defaultErrorHandler: true,
         classTransformer: true,
@@ -49,7 +56,7 @@ async function main() {
             },
         },
         info: {
-            title: "Documentação da API",
+            title: "Chico Bot as a Service",
             version: "1.0.0",
         },
     });
@@ -61,7 +68,7 @@ async function main() {
     const server = useExpressServer(app, config);
 
     rootLogger.info("Iniciando Endpoint");
-    server.listen(configuration.serverPort, () => rootLogger.info("App listening to port " + configuration.serverPort));
+    server.listen(configuration.serverPort, "0.0.0.0", () => rootLogger.info("App listening to port " + configuration.serverPort));
 }
 
 main().catch((err) => console.log(err));

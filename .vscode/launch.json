@@ -19,7 +19,34 @@
             "console": "integratedTerminal",
             "program": "${workspaceFolder}/src/index.ts",
             "preLaunchTask": "tsc: build - tsconfig.json",
-            "outFiles": ["${workspaceFolder}/out/**/*.js"],
+            "outFiles": [
+                "${workspaceFolder}/out/**/*.js"
+            ],
+            "sourceMapPathOverrides": {
+                "webpack:///./~/*": "${workspaceRoot}/node_modules/*",
+                "webpack:///./*": "${workspaceRoot}/*",
+                "webpack:///*": "*"
+            },
+            "sourceMaps": true
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch File",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "env": {
+                "NODE_ENV": "development"
+            },
+            "envFile": "${workspaceFolder}/.env",
+            "cwd": "${workspaceFolder}",
+            "console": "integratedTerminal",
+            "program": "${file}",
+            "preLaunchTask": "tsc: build - tsconfig.json",
+            "outFiles": [
+                "${workspaceFolder}/out/**/*.js"
+            ],
             "sourceMapPathOverrides": {
                 "webpack:///./~/*": "${workspaceRoot}/node_modules/*",
                 "webpack:///./*": "${workspaceRoot}/*",

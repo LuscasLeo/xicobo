@@ -1,8 +1,7 @@
 node_modules
 
 tokens
-!resources/my-instants/
-resources/
+resources/my-instants/*
 coverage
 logs
 out

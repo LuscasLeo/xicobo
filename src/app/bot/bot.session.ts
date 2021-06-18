@@ -6,6 +6,7 @@ import MyinstantsService from "../myinstants/myinstants.service";
 import { getRandom } from "../utils";
 import { CommandHandler, MandaCommandHandler, MyInstantDownloadCommandHandler, ShowCommands, SorteiaCommandHandler } from "./command.handler";
 
+
 export async function createBotSession(botID: string) {
     const session = await venom.create({
         session: "main",
@@ -25,12 +26,7 @@ export class BotSession {
         };
         this.commandHandlers["comandos"] = new ShowCommands(this.session, this.commandHandlers);
 
-        this.session.onMessage((message) => {
-            const hasMentioned = this.isBotMentioned(message);
-            if (hasMentioned) {
-                this.handleMessage(message).catch((err) => console.log(err));
-            }
-        });
+        this.session.onMessage(this.handleMessage);
     }
 
     isBotMentioned(message: Message) {
@@ -42,14 +38,19 @@ export class BotSession {
         return message.type === "chat";
     }
 
-    async handleMessage(message: Message) {
+    private async handleMessage(message: Message) {
         if (!this.isValidMessage(message)) {
             await this.session.reply(message.chatId, "Não entendo mensagens que não sejam somente texto :/\n nem Alguns textos alias.", message.id.toString());
 
             return;
         }
 
-        await this.handleCommand(message);
+        try {
+            await this.handleCommand(message);
+
+        } catch (error) {
+            this
+        }
     }
 
     async handleCommand(message: Message) {

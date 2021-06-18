@@ -4,17 +4,7 @@ import * as venom from "venom-bot";
 import { Message } from "venom-bot";
 import MyinstantsService from "../myinstants/myinstants.service";
 import { getRandom } from "../utils";
-import {
-    CommandHandler,
-    MandaCommandHandler,
-    MyInstantDownloadCommandHandler,
-    SendAcabouCommandHandler,
-    SendCalmaCommandHandler,
-    SendDancaCommandHandler,
-    SendEEpaCommandHandler,
-    SendRapazCommandHandler,
-    SendRatinhoCommandHandler,
-} from "./command.handler";
+import { CommandHandler, MandaCommandHandler, MyInstantDownloadCommandHandler, ShowCommands, SorteiaCommandHandler } from "./command.handler";
 
 export async function createBotSession(botID: string) {
     const session = await venom.create({
@@ -29,15 +19,11 @@ export class BotSession {
 
     constructor(private botID: string, private session: venom.Whatsapp) {
         this.commandHandlers = {
-            rapaz: new SendRapazCommandHandler(this.session),
-            ratinho: new SendRatinhoCommandHandler(this.session),
-            eepa: new SendEEpaCommandHandler(this.session),
-            danca: new SendDancaCommandHandler(this.session),
-            acabou: new SendAcabouCommandHandler(this.session),
-            calma: new SendCalmaCommandHandler(this.session),
             manda: new MandaCommandHandler(this.session),
             som: new MyInstantDownloadCommandHandler(this.session, new MyinstantsService()),
+            sorteia: new SorteiaCommandHandler(this.botID, this.session),
         };
+        this.commandHandlers["comandos"] = new ShowCommands(this.session, this.commandHandlers);
 
         this.session.onMessage((message) => {
             const hasMentioned = this.isBotMentioned(message);

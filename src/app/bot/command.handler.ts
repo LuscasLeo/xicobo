@@ -13,67 +13,13 @@ export abstract class CommandHandler {
     abstract handle(args: ParsedArgs, message: Message): Promise<void>;
 }
 
-abstract class SendAudioCommandHandler extends CommandHandler {
-    constructor(private botSession: Whatsapp) {
-        super();
-    }
-
-    async sendAudio(name: string, chatId: string) {
-        await this.botSession.sendVoice(chatId, `resources/${name}`);
-    }
-
-    getDescription() {
-        return "Envia audio";
-    }
-
-    getUsage() {
-        return "";
-    }
-}
-
-export class SendRapazCommandHandler extends SendAudioCommandHandler {
-    async handle(args: ParsedArgs, message: Message) {
-        await this.sendAudio("rapaz.mp3", message.chatId);
-    }
-}
-
-export class SendRatinhoCommandHandler extends SendAudioCommandHandler {
-    async handle(args: ParsedArgs, message: Message) {
-        await this.sendAudio("ratinho.mp3", message.chatId);
-    }
-}
-
-export class SendEEpaCommandHandler extends SendAudioCommandHandler {
-    async handle(args: ParsedArgs, message: Message) {
-        await this.sendAudio("eepa.mp3", message.chatId);
-    }
-}
-
-export class SendCalmaCommandHandler extends SendAudioCommandHandler {
-    async handle(args: ParsedArgs, message: Message) {
-        await this.sendAudio("calma.mp3", message.chatId);
-    }
-}
-
-export class SendAcabouCommandHandler extends SendAudioCommandHandler {
-    async handle(args: ParsedArgs, message: Message) {
-        await this.sendAudio("acabou.mp3", message.chatId);
-    }
-}
-
-export class SendDancaCommandHandler extends SendAudioCommandHandler {
-    async handle(args: ParsedArgs, message: Message) {
-        await this.sendAudio("rapaz.mp3", message.chatId);
-    }
-}
-
 export class SorteiaCommandHandler extends CommandHandler {
     constructor(private botID: string, private session: Whatsapp) {
         super();
     }
 
     getDescription() {
-        return "Sorteia alguem da equipe";
+        return "Sorteia alguem do gp";
     }
 
     getUsage() {
@@ -132,7 +78,7 @@ export class MyInstantDownloadCommandHandler extends CommandHandler {
     }
 
     getDescription() {
-        return "Manda um som do MyInstants";
+        return "Manda um som do MyInstants [usa o ID do som ta pfv]";
     }
     getUsage() {
         return "<id_do_som>";
@@ -161,5 +107,28 @@ export class MyInstantDownloadCommandHandler extends CommandHandler {
         }
 
         await this.session.sendVoice(message.chatId, `${dir}/sound.mp3`);
+    }
+}
+
+export class ShowCommands extends CommandHandler {
+    constructor(private session: Whatsapp, private commands: { [key: string]: CommandHandler }) {
+        super();
+    }
+
+    getDescription() {
+        return "Mostra os comandos ue";
+    }
+    getUsage() {
+        return "";
+    }
+
+    async handle(args: ParsedArgs, message: Message) {
+        const msg =
+            "Ta aqui:\n" +
+            Object.entries(this.commands)
+                .map(([command, handler]) => `${command} ${handler.getUsage()} - ${handler.getDescription()}`)
+                .join("\n");
+
+        this.session.reply(message.chatId, msg, message.id.toString());
     }
 }

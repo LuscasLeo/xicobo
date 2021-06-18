@@ -1,19 +1,16 @@
-# Sample de API em NodeJS com TypeScript
+# XicoBô
 
-    Web Service RESTFull
+    Whatsapp ChatBot e WebService
 
--   Log de chamadas HTTP ([Express Morgan](https://github.com/expressjs/morgan#readme))
--   Sistema de logging com armazenamento ([Winston](https://github.com/winstonjs/winston#readme))
--   Manipulação de banco de dados com Entidades ([TypeORM](https://typeorm.io/#/))
--   Design baseado em Model, Service, Controller e injeção de dependencias ([routing-controllers](https://github.com/typestack/routing-controllers#readme) e [TypeDI](https://github.com/typestack/typedi#readme))
--   Auto Documentação ([Sweagger](https://swagger.io/) - [OpenAPI](https://www.openapis.org/) [para Routing controllers](https://github.com/epiphone/routing-controllers-openapi#readme))
--   Testes unitários ([Jest](https://jestjs.io/pt-BR/))
+Chatbot feito em NodeJS com uso do [Venom Bot](https://github.com/orkestral/venom) e [LuscasLeo/sample-restful-webservice](https://github.com/LuscasLeo/sample-restful-webservice)
 
-## A fazer
+## Chrome Driver
 
--   Adicionar Linter de commit ([Husky](https://typicode.github.io/husky/#/))
+É necessário configurar o chrome driver de acordo com seu sistema operacional e configurações locais.
 
--   Adicionar Teste Unitário
+## VSCode Remote Container
+
+É possivel usar um ambiente virtualizado no [Docker](https://www.docker.com/get-started), com <b>Chrome Driver já configurado,</b> dentro do [VSCode](https://code.visualstudio.com/download) usando a extensão [Remote Container](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers) Após a instalação, use a opção `Remote-Containers: Open Folder in Container...` (http://prntscr.com/15t9by9)
 
 ## Instalação
 

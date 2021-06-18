@@ -1,9 +1,9 @@
 import path from "path";
-import winston, { createLogger } from "winston";
+import winston, { createLogger, format } from "winston";
 import { Console, File } from "winston/lib/winston/transports";
 import configuration from "../../configuration";
 
-const format = [
+const rootLoggerFormat = [
     // Add the message timestamp with the preferred format
     winston.format.timestamp({ format: configuration.logDateTimeFormat }),
 
@@ -14,7 +14,7 @@ const format = [
 
 export const rootLogger = createLogger({
     level: "debug",
-    format: winston.format.combine(...format),
+    format: winston.format.combine(...rootLoggerFormat),
     defaultMeta: { service: "user-service" },
     transports: [
         new File({
@@ -28,7 +28,22 @@ export const rootLogger = createLogger({
         }),
         new Console({
             handleExceptions: true,
-            format: winston.format.combine(...[winston.format.colorize({ all: true }), ...format]),
+            format: winston.format.combine(...[winston.format.colorize({ all: true }), ...rootLoggerFormat]),
         }),
     ],
 });
+
+export function createConsoleLogger(name: string) {
+    return createLogger({
+        level: "debug",
+        format: format.combine(
+            ...rootLoggerFormat,
+
+            winston.format.colorize({ all: true }),
+            format.label({ label: name }),
+            format.timestamp(),
+            format.printf(({ level, message, label, timestamp }) => `${timestamp} [${label}] ${level}: ${message}`)
+        ),
+        transports: [new Console()],
+    });
+}
